@@ -1,4 +1,5 @@
 import { createLab } from './model.js';
+import { createStory } from './story.js';
 import { STEPS, PARTS, PRODUCTS, QUESTIONS, initialState, advance, selectStage, STAGE_SECONDS } from './lesson.js';
 
 const $=s=>document.querySelector(s);
@@ -143,6 +144,7 @@ document.addEventListener('keydown',e=>{
   else if(e.key==='Escape'&&presenting&&!document.fullscreenElement)present();
 });
 renderCopy();renderDetail();renderControls();
+createStory(goStage);
 try{
   lab=createLab($('#viewport'),inspect);$('#scene-loading').remove();lab.select(selected);
 }catch(error){
@@ -167,3 +169,6 @@ $('#intro-motion').addEventListener('click',()=>{const paused=document.querySele
 
 $('#zoom-in').addEventListener('click',()=>lab?.zoom(1.2));
 $('#zoom-out').addEventListener('click',()=>lab?.zoom(1/1.2));
+const cutaway=document.createElement('button');cutaway.id='cutaway-toggle';cutaway.className='tool';cutaway.type='button';cutaway.textContent='Cutaway';cutaway.setAttribute('aria-label','Toggle transparent cutaway view');cutaway.setAttribute('aria-pressed','false');
+$('.view-tools').append(cutaway);
+cutaway.addEventListener('click',()=>{const active=cutaway.getAttribute('aria-pressed')!=='true';cutaway.setAttribute('aria-pressed',String(active));cutaway.classList.toggle('active',active);lab?.cutaway(active);toast(active?'Cutaway: follow particles inside the glass':'Glass view restored');});

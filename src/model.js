@@ -144,6 +144,10 @@ export function createLab(container,onSelect){
   arrow(V(1.1,3.3,.4),V(-.65,4.65,.4),blue,condenserArrows);
   const halo=ring(V(-2,.95,0),.95,.035,orange,apparatus);
   const heatArrows=new THREE.Group();apparatus.add(heatArrows);for(let i=0;i<3;i++)arrow(V(-2.5+i*.5,.9,.6),V(-2.5+i*.5,1.3,.6),orange,heatArrows);
+  const columnArrows=new THREE.Group();apparatus.add(columnArrows);
+  arrow(V(-2.45,3.2,.2),V(-2.45,4.8,.2),orange,columnArrows);
+  arrow(V(-1.55,4.8,.2),V(-1.55,3.2,.2),blue,columnArrows);
+  const selectionRing=ring(V(-2,4,0),.32,.018,orange,apparatus);
   const refineryParticles=[];for(let i=0;i<30;i++){const m=mesh(new THREE.SphereGeometry(.055,10,8),i%2?orange:blue,V(0,0,0),refinery);refineryParticles.push({mesh:m,seed:i/30});}
   const baseLabels=[
     {id:'flask',name:'Distillation flask',pos:V(-2.65,1.75,.1),dx:-63,dy:0},
@@ -206,6 +210,9 @@ export function createLab(container,onSelect){
   });
   function animate(t){
     const step=mode==='explore'?0:state.step,time=state.elapsed;
+    columnArrows.visible=step===2;
+    selectionRing.visible=selected==='column'&&mode!=='world';
+    selectionRing.position.y=3.1+((t*.25)%1)*2.1;
     condenserArrows.visible=step===3;
     halo.visible=mode==='process'&&!focused&&spotlight!=='all';halo.position.copy(spotlight==='receiver'?V(2.13,.38,0):spotlight==='condenser'?V(.2,4.2,0):V(-2,.95,0));halo.scale.setScalar(1+Math.sin(time*2)*.055);
     intro=Math.min(1,intro+.025);apparatus.scale.setScalar(reduced?1:.85+.15*(1-Math.pow(1-intro,3)));
@@ -240,6 +247,7 @@ export function createLab(container,onSelect){
     setProduct(i){product=i;productTrays.forEach((m,j)=>{m.material.opacity=i===j?1:.4;});productPipes.forEach((m,j)=>{m.material.opacity=i===j?1:.3;});updateLabelStyles();},
     focus(value){focused=value;apparatus.visible=!value;closeup.visible=value;refinery.visible=false;makeLabels();resetCamera();},
     spotlight(id){spotlight=id;},
+    cutaway(value){glass.opacity=value?.12:.38;jacket.opacity=value?.12:.3;},
     zoomPart(id){const positions={flask:V(-2,1.7,0),heater:V(-2,1.4,0),condenser:V(.2,4.3,0),receiver:V(2.1,1.4,0)};const target=positions[id]||V(-2,4,0);controls.target.copy(target);camera.position.copy(target).add(V(6,2,18));camera.zoom=1.5;camera.updateProjectionMatrix();controls.update();},
     zoom(factor){camera.zoom=THREE.MathUtils.clamp(camera.zoom*factor,.72,2.2);camera.updateProjectionMatrix();},
     labels(value){showLabels=value;},
