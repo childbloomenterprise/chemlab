@@ -1,5 +1,6 @@
 import { createLab } from './model.js';
 import { createStory } from './story.js';
+import { createSolventSession } from './solvent-session.js';
 import { STEPS, PARTS, PRODUCTS, QUESTIONS, initialState, advance, selectStage, STAGE_SECONDS } from './lesson.js';
 
 const $=s=>document.querySelector(s);
@@ -145,6 +146,7 @@ document.addEventListener('keydown',e=>{
 });
 renderCopy();renderDetail();renderControls();
 createStory(goStage);
+createSolventSession(goStage);
 try{
   lab=createLab($('#viewport'),inspect);$('#scene-loading').remove();lab.select(selected);
 }catch(error){

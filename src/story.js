@@ -18,6 +18,16 @@ export function createStory(onStage) {
     <g fill="#344f41" font-family="inherit" font-size="17"><text x="20" y="31">MIXTURE</text><text x="190" y="46">REPEATED CONTACT</text><text x="397" y="165">COOL</text><text x="473" y="367">COLLECT</text><text x="186" y="192">vapour ↑</text><text x="186" y="225">liquid ↓</text></g></svg><div class="story-legend"><span><i class="particle a"></i>A · more volatile</span><span><i class="particle b"></i>B · less volatile</span></div><p>Illustration only · no predicted temperatures or purity</p></div></div>
     <div class="story-check"><h3>Before we enter: does the column act like a filter?</h3><div><button type="button" data-story-answer="wrong">Yes, it traps component B</button><button type="button" data-story-answer="right">No, it repeats phase changes</button></div><p id="story-answer" role="status"></p></div>`;
   document.querySelector('#lesson').before(section);
+  const visual=section.querySelector('.story-visual');
+  visual.insertAdjacentHTML('afterbegin','<div class="story-phase-banner"><strong id="story-phase">Liquid → vapour</strong><small>PHYSICAL CHANGE · MOLECULES STAY INTACT</small></div>');
+  const svg=visual.querySelector('svg'),ns='http://www.w3.org/2000/svg';
+  svg.querySelector('defs').insertAdjacentHTML('beforeend','<linearGradient id="story-glass-gradient"><stop stop-color="#b5cebb" stop-opacity=".6"/><stop offset=".45" stop-color="#ffffff" stop-opacity=".9"/><stop offset="1" stop-color="#b2ccba" stop-opacity=".6"/></linearGradient><linearGradient id="story-liquid-gradient" x2="0" y2="1"><stop stop-color="#9bbeb1"/><stop offset="1" stop-color="#568675"/></linearGradient>');
+  svg.querySelector('g').setAttribute('fill','url(#story-glass-gradient)');
+  svg.querySelector('path[fill="#75a99b"]').classList.add('story-liquid');
+  svg.querySelector('path[fill="#dda360"]').classList.add('story-receiver-liquid');
+  const highlight=document.createElementNS(ns,'rect');highlight.setAttribute('class','story-stage-highlight');highlight.setAttribute('rx','12');svg.append(highlight);
+  const water=document.createElementNS(ns,'g');water.setAttribute('class','story-cooling-water story-particles');
+  for(let i=0;i<7;i++){const dot=document.createElementNS(ns,'circle');dot.setAttribute('r','3');dot.setAttribute('class','story-water-dot');dot.style.animationDelay=`-${i*.57}s`;water.append(dot);}svg.append(water);
   const nav = document.createElement('button'); nav.className='nav-item';nav.textContent='The idea';nav.type='button';
   document.querySelector('.main-nav').prepend(nav);
   nav.addEventListener('click',()=>section.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'}));
@@ -30,6 +40,9 @@ export function createStory(onStage) {
   let step=0;
   function render(){
     section.dataset.storyStep=step;
+    section.querySelector('#story-phase').textContent=['01 · Liquid → vapour','02 · Repeated vapour ⇄ liquid contact','03 · Vapour → liquid','04 · Liquid fraction collected'][step];
+    const areas=[[67,292,150,153],[99,55,83,235],[185,65,260,185],[368,295,132,135]];
+    ['x','y','width','height'].forEach((name,i)=>highlight.setAttribute(name,areas[step][i]));
     section.querySelectorAll('[data-story-step]').forEach((b,i)=>b.setAttribute('aria-pressed',String(i===step)));
     section.querySelector('#story-subtitle').textContent=descriptions[step][0];
     section.querySelector('#story-description').textContent=descriptions[step][1];

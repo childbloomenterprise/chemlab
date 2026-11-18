@@ -6,7 +6,7 @@
   "scripts": {
     "build": "node build.mjs",
     "dev": "node serve.mjs",
-    "test": "node --test src/lesson.test.js"
+    "test": "node --test src/lesson.test.js src/molecules.test.js"
   },
   "dependencies": { "three": "^0.181.0" },
   "devDependencies": { "esbuild": "^0.25.0" }
