@@ -6,7 +6,7 @@ import { PRODUCTS } from './lesson.js';
 const V=(x,y,z=0)=>new THREE.Vector3(x,y,z);
 const UP=V(0,1,0);
 const C={ green:0x577961, glass:0xc4ddce, metal:0x82938a, dark:0x344f41, orange:0xe39849, blue:0x3d90b3, cream:0xd9dfcb };
-export function createLab(container,onSelect){
+export function createLab(container,onSelect,options={}){
   const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true,powerPreference:'high-performance'});
   renderer.setPixelRatio(Math.min(window.devicePixelRatio,1.5));
   renderer.setClearColor(0x000000,0);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
@@ -171,11 +171,11 @@ export function createLab(container,onSelect){
     {id:'world-heater',name:'Heated crude oil',pos:V(-2.5,1,.3),dx:-65,dy:15},
     ...PRODUCTS.map((p,i)=>({id:'product-'+i,name:p.name,pos:V(.1,p.y,.1),dx:95+i*6,dy:-7,right:true}))
   ];
-  const labelsContainer=document.getElementById('scene-labels');
+  const labelsContainer=options.labelsContainer||document.getElementById('scene-labels');
   function makeLabels(){
     labelsContainer.replaceChildren();labelElements.length=0;
     const list=mode==='world'?worldLabels:focused?closeLabels:baseLabels;
-    list.forEach(item=>{const b=document.createElement('button');b.className='part-label'+(item.right?' right':'')+(item.below?' below':'');b.innerHTML='<span class="part-dot"></span>'+item.name;b.setAttribute('aria-label','Inspect '+item.name);b.addEventListener('click',()=>onSelect(item.id));labelsContainer.append(b);labelElements.push({...item,element:b});});
+    list.forEach(item=>{const name=options.names?.[item.id]||item.name;const b=document.createElement('button');b.className='part-label'+(item.right?' right':'')+(item.below?' below':'');b.innerHTML='<span class="part-dot"></span>'+name;b.setAttribute('aria-label','Inspect '+name);b.addEventListener('click',()=>onSelect(item.id));labelsContainer.append(b);labelElements.push({...item,element:b});});
     updateLabelStyles();
   }
   function updateLabelStyles(){for(const l of labelElements)l.element.classList.toggle('selected',l.id===selected||(mode==='world'&&l.id==='product-'+product));}
@@ -198,7 +198,9 @@ export function createLab(container,onSelect){
     if(width/height<1.1&&!focused){const span=9.5/(width/height);camera.top=span/2;camera.bottom=-span/2;camera.left=-4.75;camera.right=4.75;}
     camera.updateProjectionMatrix();controls.update();
   }
-  const observer=new ResizeObserver(()=>{width=container.clientWidth;height=container.clientHeight;renderer.setSize(width,height);resetCamera();});observer.observe(container);
+  const observer=new ResizeObserver(()=>{const w=container.clientWidth,h=container.clientHeight;if(!w||!h)return;width=w;height=h;renderer.setSize(width,height);resetCamera();});observer.observe(container);
+  let visible=true;
+  const visibility=new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;},{rootMargin:'100px'});visibility.observe(container);
   let pointerStart;
   canvas.addEventListener('pointerdown',e=>{pointerStart={x:e.clientX,y:e.clientY};});
   canvas.addEventListener('pointerup',e=>{
@@ -224,7 +226,8 @@ export function createLab(container,onSelect){
       const p=(time*.13+s)%1;
       if(step<1){m.visible=false;return;}
       if(step===1){m.visible=true;m.position.set(-2+Math.sin(angle+p*3)*.2,1.5+p*1.25,Math.cos(angle+p*3)*.18);}
-      else if(step===2||step===4){m.visible=true;const max=type==='b'&&s>.3?3.8:5.8;m.position.set(-2+Math.sin(angle+p*4)*.12,2.4+p*(max-2.4),Math.cos(angle+p*4)*.12);}
+      else if(step===4){m.visible=true;if(p<.4)m.position.set(-2+Math.sin(angle+p*4)*.12,2.4+p/.4*3.29,Math.cos(angle+p*4)*.12);else if(p<.5)m.position.lerpVectors(V(-2,5.69,0),inletPoint,(p-.4)/.1);else if(p<.85)m.position.lerpVectors(inletPoint,outletPoint,(p-.5)/.35);else m.position.lerpVectors(outletPoint,V(2.13,1.9,0),(p-.85)/.15);}
+      else if(step===2){m.visible=true;const max=type==='b'&&s>.3?3.8:5.8;m.position.set(-2+Math.sin(angle+p*4)*.12,2.4+p*(max-2.4),Math.cos(angle+p*4)*.12);}
       else {m.visible=true;const p0=V(-2,5.69,0),p1=V(-1.3,5.5,0);if(p<.2)m.position.lerpVectors(p0,p1,p/.2);else m.position.lerpVectors(inletPoint,outletPoint,(p-.2)/.8);m.position.z+=Math.sin(angle)*.035;}
     });
     reflux.forEach(({mesh:m,seed:s})=>{m.visible=step>=2;const q=(time*.2+s)%1;m.position.set(-2+Math.sin(s*51)*.205,5.2-q*2.4,Math.cos(s*51)*.205);m.scale.set(1,1.4,1);});
@@ -248,12 +251,13 @@ export function createLab(container,onSelect){
     focus(value){focused=value;apparatus.visible=!value;closeup.visible=value;refinery.visible=false;makeLabels();resetCamera();},
     spotlight(id){spotlight=id;},
     cutaway(value){glass.opacity=value?.12:.38;jacket.opacity=value?.12:.3;},
+    packing(value){beads.visible=value;closeup.children.filter(m=>m.material===beadMat).forEach(m=>{m.visible=value;});},
     zoomPart(id){const positions={flask:V(-2,1.7,0),heater:V(-2,1.4,0),condenser:V(.2,4.3,0),receiver:V(2.1,1.4,0)};const target=positions[id]||V(-2,4,0);controls.target.copy(target);camera.position.copy(target).add(V(6,2,18));camera.zoom=1.5;camera.updateProjectionMatrix();controls.update();},
     zoom(factor){camera.zoom=THREE.MathUtils.clamp(camera.zoom*factor,.72,2.2);camera.updateProjectionMatrix();},
     labels(value){showLabels=value;},
     rotate(value){controls.autoRotate=value;},
     reset:resetCamera,
-    render(now,illustrationTime){if(now-lastFrame<28)return;lastFrame=now;animate(illustrationTime);controls.update();projectLabels();renderer.render(scene,camera);},
-    dispose(){observer.disconnect();controls.dispose();renderer.dispose();env.dispose();}
+    render(now,illustrationTime){if(!visible||!container.clientWidth||!container.clientHeight||now-lastFrame<28)return;lastFrame=now;animate(illustrationTime);controls.update();projectLabels();renderer.render(scene,camera);},
+    dispose(){observer.disconnect();visibility.disconnect();controls.dispose();renderer.dispose();env.dispose();}
   };
 }
