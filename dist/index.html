@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f4ee">
+  <meta name="description" content="Explore fractional distillation in an interactive 3D chemistry lab. A guided Class 11 lesson with a working apparatus, column close-up and classroom presentation mode.">
+  <title>Fraction Lab · A little heat. A clear separation.</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <svg class="sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+    <symbol id="i-flask" viewBox="0 0 24 24"><path d="M9 3h6m-5 0v7L4.5 19a1.3 1.3 0 0 0 1.1 2h12.8a1.3 1.3 0 0 0 1.1-2L14 10V3M7 15h10"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="m9 5 11 7-11 7z"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></symbol>
+    <symbol id="i-reset" viewBox="0 0 24 24"><path d="M3 10a9 9 0 1 1 1.5 7M3 4v6h6"/></symbol>
+    <symbol id="i-expand" viewBox="0 0 24 24"><path d="M9 3H3v6m12-6h6v6M3 15v6h6m6 0h6v-6"/></symbol>
+    <symbol id="i-focus" viewBox="0 0 24 24"><circle cx="10" cy="10" r="6"/><path d="m15 15 6 6M7 10h6m-3-3v6"/></symbol>
+    <symbol id="i-rotate" viewBox="0 0 24 24"><path d="M20 7a9 9 0 1 0 1 8M20 2v5h-5"/></symbol>
+    <symbol id="i-label" viewBox="0 0 24 24"><path d="M3 3h8l10 10-8 8L3 11z"/><circle cx="7" cy="7" r="1"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M12 5v16M3 3c4 0 6 0 9 2 3-2 5-2 9-2v16c-4 0-6 0-9 2-3-2-5-2-9-2z"/></symbol>
+  </defs></svg>
+  <a class="skip" href="#lesson">Skip to the lesson</a>
+  <div class="app-shell">
+    <header class="site-header">
+      <a href="./" class="brand" aria-label="Fraction Lab home"><span class="brand-icon"><svg><use href="#i-flask"/></svg></span>fraction<span class="brand-light">lab</span><span class="brand-dot">.</span></a>
+      <nav class="main-nav" aria-label="Lesson sections">
+        <button class="nav-item active" data-mode="explore" aria-current="page">The apparatus</button>
+        <button class="nav-item" data-mode="process">How it works</button>
+        <button class="nav-item" data-mode="world">Real-world uses</button>
+        <button class="nav-item" data-mode="quiz">Quick check <span class="tiny-dot"></span></button>
+      </nav>
+      <button id="present" class="present-btn"><svg><use href="#i-expand"/></svg><span>Present</span><kbd>F</kbd></button>
+    </header>
+<section class="opening" aria-labelledby="opening-title">
+    <div class="opening-copy"><span class="eyebrow">WELCOME TO FRACTION LAB · CLASS XI</span>
+    <h1 id="opening-title">One mixture.<br>A world of<br><em>possibilities.</em></h1>
+    <p>Follow the journey from a mixed liquid to separate fractions. See the science. Control every step.</p>
+    <a href="#lesson" id="enter-lab" class="primary-btn">Enter the 3D lab <svg><use href="#i-arrow"/></svg></a>
+    <button id="intro-motion" class="text-btn" aria-pressed="false">Pause intro animation</button>
+    <div class="opening-caption"><span>01 / HEAT</span><span>02 / SEPARATE</span><span>03 / DISCOVER</span></div></div>
+    <div class="opening-art" role="img" aria-label="Animated illustration: a mixed liquid releases vapour, vapour rises through a column and condenses into collected liquid. Orange and blue identify illustrative components.">
+    <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+    <svg class="intro-apparatus" viewBox="0 0 600 580" aria-hidden="true">
+      <defs><linearGradient id="intro-glass" x1="0" x2="1"><stop stop-color="#bed4bd" stop-opacity=".6"/><stop offset=".45" stop-color="#fff" stop-opacity=".65"/><stop offset="1" stop-color="#849e83" stop-opacity=".4"/></linearGradient><linearGradient id="intro-liquid" x2="0" y2="1"><stop stop-color="#99bba5"/><stop offset="1" stop-color="#47725d"/></linearGradient></defs>
+      <ellipse cx="300" cy="505" rx="250" ry="32" fill="#d9e1cd" stroke="none"/>
+      <g stroke="#728c75" stroke-width="2.5" fill="url(#intro-glass)">
+        <path d="M157 351V315h46v36a65 65 0 1 1-46 0Z"/>
+        <path d="M158 315V115h44v200Z"/>
+        <path d="M202 128l197 132-15 23-182-122Z"/>
+        <path d="m233 142 144 96-29 43-144-96Z"/>
+        <path d="m399 260 25 18v103h-12V285l-28-2"/>
+        <path d="M405 368h30v31l45 79h-120l45-79Z"/>
+      </g>
+      <path d="M120 410a60 60 0 0 0 120 0Z" fill="url(#intro-liquid)" stroke="none"/>
+      <path d="m379 450-14 25h110l-14-25Z" fill="#d5a262" stroke="none"/>
+      <g stroke="#95ab87" stroke-width="3"><path d="M160 145h40m-40 30h40m-40 30h40m-40 30h40m-40 30h40m-40 30h40"/></g>
+      <rect x="118" y="471" width="124" height="24" rx="9" fill="#284d3e" stroke="none"/>
+      <g class="intro-heat" stroke="#c6793e" stroke-width="4"><path d="M150 465v-20m30 20v-20m30 20v-20"/></g>
+      <g fill="#ce793d" stroke="none"><circle class="intro-dot" r="7"/><circle class="intro-dot dot-two" r="6"/><circle class="intro-dot dot-three" r="7"/></g>
+      <g fill="#397f99" stroke="none"><circle class="intro-return" r="6"/><circle class="intro-return return-two" r="6"/></g>
+      <g fill="#c68a40" stroke="none"><circle class="intro-drop" cx="419" r="5"/><circle class="intro-drop drop-two" cx="419" r="5"/></g>
+    </svg>
+    <span class="intro-tag tag-one">A little heat.</span><span class="intro-tag tag-two">A clever column.</span><span class="intro-tag tag-three">A clearer separation.</span>
+    <span class="opening-note">A visual introduction · illustrative particle flow</span></div>
+  </section>
+    <main id="lesson" class="lesson-layout">
+      <aside class="lesson-copy" id="copy-panel" aria-label="Lesson explanation"></aside>
+      <section class="lab" aria-label="Interactive 3D laboratory">
+        <div class="lab-heading"><span><span class="live-dot"></span>YOUR VIRTUAL LAB</span><span class="lab-caption" id="lab-caption">Drag to rotate · Use + / − to zoom</span></div>
+        <div id="viewport" role="group" aria-label="Rotatable 3D fractional distillation apparatus with a flask, fractionating column, thermometer, condenser and receiving flask">
+          <div class="scene-loading" id="scene-loading"><span></span>Setting up your lab…</div>
+          <div id="scene-labels"></div>
+          <div class="scene-stamp" aria-hidden="true">FIG. 01 <span>/</span> FRACTIONAL DISTILLATION</div>
+          <div id="focus-badge" class="focus-badge" hidden>INSIDE THE COLUMN <span>Illustrative molecular view</span></div>
+          <div class="view-tools" aria-label="Model view controls"><button id="zoom-in" class="tool" aria-label="Zoom in">+</button><button id="zoom-out" class="tool" aria-label="Zoom out">−</button>
+            <button id="labels-toggle" class="tool active" aria-label="Toggle apparatus labels" aria-pressed="true" title="Toggle labels (L)"><svg><use href="#i-label"/></svg></button>
+            <button id="rotate-toggle" class="tool" aria-label="Auto-rotate model" aria-pressed="false" title="Auto-rotate"><svg><use href="#i-rotate"/></svg></button>
+            <button id="view-reset" class="tool" aria-label="Reset camera view" title="Reset view"><svg><use href="#i-reset"/></svg></button>
+          </div>
+          <div class="model-legend" id="model-legend"><span><i class="particle a"></i>Liquid A <small>more volatile</small></span><span><i class="particle b"></i>Liquid B <small>less volatile</small></span></div>
+        </div>
+        <div class="apparatus-detail" id="apparatus-detail" aria-live="polite"></div>
+      </section>
+    </main>
+    <section class="experiment-dock" aria-label="Experiment controls">
+      <button id="play" class="play-btn"><svg><use href="#i-play"/></svg><span>Run experiment</span></button>
+      <div class="step-track" aria-label="Experiment stages">
+        <button class="step active" data-step="0" aria-current="step"><span>01</span><strong>Set up</strong></button>
+        <div class="step-line"></div><button class="step" data-step="1"><span>02</span><strong>Heat</strong></button>
+        <div class="step-line"></div><button class="step" data-step="2"><span>03</span><strong>Fractionate</strong></button>
+        <div class="step-line"></div><button class="step" data-step="3"><span>04</span><strong>Condense</strong></button>
+        <div class="step-line"></div><button class="step" data-step="4"><span>05</span><strong>Collect</strong></button>
+      </div>
+      <div class="step-arrows"><button id="previous" class="tool" aria-label="Previous stage" disabled><svg class="flip"><use href="#i-arrow"/></svg></button><button id="next" class="tool" aria-label="Next stage"><svg><use href="#i-arrow"/></svg></button><button id="restart" class="tool" aria-label="Restart experiment" title="Restart (R)"><svg><use href="#i-reset"/></svg></button></div>
+    </section>
+    <footer class="site-footer"><span><span class="class-badge">CLASS XI</span> Chemistry, made visible.</span><span class="footer-center">An illustrative model · not a quantitative simulation</span><button id="open-notes"><svg><use href="#i-book"/></svg>Lesson notes & sources</button></footer>
+  </div>
+  <dialog id="notes-dialog" aria-labelledby="notes-title"><div class="dialog-head"><span class="eyebrow">YOUR CLASSROOM COMPANION</span><button class="tool" id="close-notes" aria-label="Close lesson notes"><svg><use href="#i-close"/></svg></button></div><h2 id="notes-title">The science behind the scene.</h2><p>Fractional distillation separates miscible liquids, especially when their boiling points are close. A fractionating column provides repeated condensation and vaporisation. The vapour becomes richer in the more volatile component as it rises.</p><div class="note-grid"><div><h3>Remember</h3><ul><li>Both components can vaporise together.</li><li>The column improves separation; it is not a filter.</li><li>The thermometer bulb sits near the side-arm, in the vapour path.</li><li>Cooling water enters the condenser at the lower end and leaves at the upper end.</li><li>A fraction is a portion collected during distillation, not necessarily a pure substance.</li></ul></div><div><h3>Present with confidence</h3><p><kbd>Space</kbd> Pause / play current animation<br><kbd>←</kbd> <kbd>→</kbd> Choose stage / summary<br><kbd>F</kbd> TV / fullscreen mode<br><kbd>L</kbd> Show / hide labels<br><kbd>R</kbd> Restart experiment<br><kbd>Esc</kbd> Leave presentation</p></div></div><h3>Model boundaries</h3><p>Liquid A and Liquid B are fictional components. Particle colours, flows, enrichment and timing illustrate the idea; they do not predict temperatures, composition or purity. Some mixtures form azeotropes and cannot be completely separated by ordinary fractional distillation. The refinery view is a simplified industrial schematic.</p><h3>Read further</h3><ul class="source-links"><li><a href="https://sathee.iitk.ac.in/sathee-jee/ncert-books/jee-ncert-books/jee-nb-che-11/chemistry-11-chapter-12-organic-chemistrysome-basic-principles-and-techniques/" target="_blank" rel="noopener">NCERT: Organic Chemistry — Some Basic Principles and Techniques ↗</a></li><li><a href="https://chem.libretexts.org/Courses/Meredith_College/Organic_I_Techniques/09%3A_Distillation/9.04%3A_Fractional_Distillation" target="_blank" rel="noopener">Chemistry LibreTexts: Fractional distillation ↗</a></li><li><a href="https://phet.colorado.edu/en/simulations/browse?subjects=chemistry" target="_blank" rel="noopener">Interaction inspiration: PhET Interactive Simulations ↗</a></li></ul><p class="note-small">A virtual teaching aid. Real apparatus requires a teacher-supervised laboratory and appropriate safety procedures.</p></dialog>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <noscript>This interactive lesson needs JavaScript. Enable JavaScript to explore the 3D apparatus.</noscript>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
+
