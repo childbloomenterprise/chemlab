@@ -2,7 +2,6 @@ import { createLab } from './model.js';
 import { createStory } from './story.js';
 import { createSolventSession } from './solvent-session.js';
 import { createPresentation } from './presentation.js';
-import { createImmersiveScenes } from './immersive-scenes.js';
 import { STEPS, PARTS, PRODUCTS, QUESTIONS, initialState, advance, selectStage, STAGE_SECONDS } from './lesson.js';
 
 const $=s=>document.querySelector(s);
@@ -150,7 +149,6 @@ renderCopy();renderDetail();renderControls();
 createStory(goStage);
 createSolventSession(goStage);
 createPresentation(setMode);
-createImmersiveScenes();
 try{
   lab=createLab($('#viewport'),inspect);$('#scene-loading').remove();lab.select(selected);
 }catch(error){
