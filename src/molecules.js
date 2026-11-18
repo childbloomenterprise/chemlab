@@ -45,13 +45,19 @@ export function createMoleculeScene(host) {
   const acetone=molecular('acetone'),benzene=molecular('benzene');acetone.position.x=-3.2;benzene.position.x=3.2;root.add(acetone,benzene);
   // Coloured plinths identify molecules; atoms use conventional element colours.
   for(const [x,color] of [[-3.2,0xc78642],[3.2,0x45899d]]){const plinth=new THREE.Mesh(new THREE.CylinderGeometry(2.8,2.9,.09,64),new THREE.MeshStandardMaterial({color,transparent:true,opacity:.18,roughness:.5}));plinth.position.set(x,-2.7,0);root.add(plinth);}
-  let playing=!matchMedia('(prefers-reduced-motion: reduce)').matches,visible=false,previous=0,time=0,view='both',space=false;
+  let playing=!matchMedia('(prefers-reduced-motion: reduce)').matches,visible=false,previous=0,time=0,view='both',space=false,thermalStage=0;
   const observer=new ResizeObserver(()=>{const w=host.clientWidth,h=host.clientHeight;renderer.setSize(w,h);camera.aspect=w/h;camera.position.z=w/h<1.2?27:19;camera.updateProjectionMatrix();});observer.observe(host);
   new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;},{rootMargin:'100px'}).observe(host);
-  function frame(now){requestAnimationFrame(frame);const dt=Math.min((now-previous)/1000,.05);previous=now;if(!visible||document.hidden)return;if(playing)time+=dt;acetone.rotation.y=Math.sin(time*.3)*.42;benzene.rotation.y=-Math.sin(time*.3)*.42;controls.update();renderer.render(scene,camera);}
+  function frame(now){requestAnimationFrame(frame);const dt=Math.min((now-previous)/1000,.05);previous=now;if(!visible||document.hidden)return;if(playing)time+=dt;acetone.rotation.y=Math.sin(time*.3)*.42;benzene.rotation.y=-Math.sin(time*.3)*.42;
+    // Agitation of intact molecules illustrates thermal motion; no bond-breaking reaction.
+    const amplitude=thermalStage===1?.12:.025;
+    acetone.position.y=Math.sin(time*22)*amplitude;benzene.position.y=Math.sin(time*19+1)*amplitude;
+    acetone.rotation.z=Math.sin(time*18)*amplitude*.4;benzene.rotation.z=Math.sin(time*16)*amplitude*.4;
+    controls.update();renderer.render(scene,camera);}
   requestAnimationFrame(frame);
   return {
     pause(){playing=!playing;return !playing;},
+    thermal(stage){thermalStage=stage;},
     view(kind){view=kind;acetone.visible=kind!=='benzene';benzene.visible=kind!=='acetone';acetone.position.x=kind==='acetone'?0:-3.2;benzene.position.x=kind==='benzene'?0:3.2;},
     spacefill(value){space=value;root.traverse(o=>{if(o.isMesh&&o.geometry===atomGeo)o.scale.multiplyScalar(value?1.65:1/1.65);});},
     reset(){root.rotation.set(0,0,0);camera.position.set(0,2.5,host.clientWidth/host.clientHeight<1.2?27:19);controls.target.set(0,0,0);controls.update();}

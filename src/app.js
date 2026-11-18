@@ -1,6 +1,7 @@
 import { createLab } from './model.js';
 import { createStory } from './story.js';
 import { createSolventSession } from './solvent-session.js';
+import { createPresentation } from './presentation.js';
 import { STEPS, PARTS, PRODUCTS, QUESTIONS, initialState, advance, selectStage, STAGE_SECONDS } from './lesson.js';
 
 const $=s=>document.querySelector(s);
@@ -101,7 +102,7 @@ async function present(){
   presenting=!presenting;document.body.classList.toggle('presenting',presenting);$('#present').setAttribute('aria-pressed',String(presenting));
   $('#present').innerHTML=icon('expand')+`<span>${presenting?'Exit presentation':'Present'}</span><kbd>F</kbd>`;
   if(presenting){
-    toast('Presentation mode · Space to pause · ← → to change stage');
+    toast('Presentation mode · Next or → for the next page · Space pauses the lab');
     if(!document.fullscreenElement){try{await document.documentElement.requestFullscreen();}catch{toast('TV layout enabled. Use your browser’s fullscreen control for an edge-to-edge view.');}}
   }else if(document.fullscreenElement){try{await document.exitFullscreen();}catch{}}
 }
@@ -147,6 +148,7 @@ document.addEventListener('keydown',e=>{
 renderCopy();renderDetail();renderControls();
 createStory(goStage);
 createSolventSession(goStage);
+createPresentation(setMode);
 try{
   lab=createLab($('#viewport'),inspect);$('#scene-loading').remove();lab.select(selected);
 }catch(error){
